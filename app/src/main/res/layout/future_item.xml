@@ -8,7 +8,7 @@
             type="android.view.View.OnClickListener"/>
         <variable
             name="model"
-            type="com.example.weather.data.db.entity.Data" />
+            type="com.example.weather.data.db.entity.Daily" />
         <variable
             name="holder"
             type="com.example.weather.ui.weather.future.list.FutureListHolder" />
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:roundToInt="@{ model.temperatureHigh}"
-            tools:text="25.0°F" />
+            tools:text="25.0" />
 
         <TextView
             android:id="@+id/textView_condition"
@@ -81,16 +81,12 @@
             android:id="@+id/imageView_condition_icon"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/textView_temperature"
+            app:layout_constraintHorizontal_bias="0.397"
+            app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             app:layout_constraintWidth_percent="0.15"
             app:loadimg="@{model.icon}"
             tools:tint="#f9a920" />
@@ -101,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:visibility="gone"
-            app:constraint_referenced_ids="textView_Low,textView_LTemp,textView_MesUnit,textView_Precip,textview_PrecipPercent,textView_visibilityRange,textView_WeatherUnit,textView_visibility"
+            app:constraint_referenced_ids="textView_Low,textView_LTemp,textView_MesUnit,textView_precip,textview_PrecipPercent,textView_visibilityRange,textView_WeatherUnit,textView_visibility"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -140,7 +136,7 @@
             tools:text="°F" />
 
         <TextView
-            android:id="@+id/textView_Precip"
+            android:id="@+id/textView_precip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -157,9 +153,9 @@
             android:layout_marginStart="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             app:toPercent="@{model.precipProbability}"
-            app:layout_constraintBottom_toBottomOf="@+id/textView_Precip"
-            app:layout_constraintStart_toEndOf="@+id/textView_Precip"
-            app:layout_constraintTop_toTopOf="@+id/textView_Precip"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_precip"
+            app:layout_constraintStart_toEndOf="@+id/textView_precip"
+            app:layout_constraintTop_toTopOf="@+id/textView_precip"
             tools:text="65%" />
 
         <TextView
@@ -197,6 +193,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView_visibilityRange"
             app:layout_constraintStart_toEndOf="@+id/textView_visibilityRange"
             app:layout_constraintTop_toTopOf="@+id/textView_visibilityRange" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°F"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_temperature"
+            app:layout_constraintStart_toEndOf="@+id/textView_temperature"
+            app:layout_constraintTop_toTopOf="@+id/textView_temperature" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

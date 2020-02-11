@@ -11,5 +11,8 @@ class CurrentWeatherViewModel(
     val weather by lazyDeferred {
         forecastRepository.getCurrentWeather()
     }
+    val daily by lazyDeferred{
+        forecastRepository.getHourlyWeatherList()
+    }
 
 }

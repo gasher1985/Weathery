@@ -1,10 +1,8 @@
 package com.example.weather.ui.weather.future.list
 
-import android.animation.ObjectAnimator
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
-import com.example.weather.data.db.entity.Data
+import com.example.weather.data.db.entity.Daily
 import com.example.weather.databinding.FutureItemBinding
 
 class FutureListHolder(private val binding: FutureItemBinding): RecyclerView.ViewHolder(binding.root) {
@@ -20,8 +18,8 @@ class FutureListHolder(private val binding: FutureItemBinding): RecyclerView.Vie
         }
     }
 
-    fun bind(futureData: Data){
-        binding.model = futureData
+    fun bind(futureDaily: Daily){
+        binding.model = futureDaily
         binding.holder = this
         binding.executePendingBindings()
     }

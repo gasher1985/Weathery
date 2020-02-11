@@ -7,12 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.R
 import com.example.weather.adapters.FutureListAdapter
-import com.example.weather.data.db.entity.Data
+import com.example.weather.data.db.entity.Daily
 import com.example.weather.ui.base.ScopedFragment
 import kotlinx.android.synthetic.main.future_list_weather_fragment.*
 import org.kodein.di.KodeinAware
@@ -66,8 +65,8 @@ class FutureListWeatherFragment : ScopedFragment(), KodeinAware {
 
     }
 
-    fun showFutureDetail(data: Data){
-        Log.d("SHIT", data.icon)
+    fun showFutureDetail(daily: Daily){
+        Log.d("SHIT", daily.icon)
         //findNavController().navigate(FutureListWeatherFragmentDirections.toFuturedetails(data.time))
     }
 

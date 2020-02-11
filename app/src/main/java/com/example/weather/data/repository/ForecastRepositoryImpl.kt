@@ -1,12 +1,19 @@
 package com.example.weather.data.repository
 
+import android.app.Application
+import android.content.Context
+import android.location.Location
 import androidx.lifecycle.LiveData
 import com.example.weather.data.db.CurrentlyDao
 import com.example.weather.data.db.DailyDao
+import com.example.weather.data.db.HourlyDao
 import com.example.weather.data.db.entity.Currently
-import com.example.weather.data.db.entity.Data
+import com.example.weather.data.db.entity.Daily
+import com.example.weather.data.db.entity.DataX
 import com.example.weather.data.network.WeatherNetworkDataSource
 import com.example.weather.data.network.responce.WeatherResponce
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -16,10 +23,20 @@ import org.threeten.bp.ZonedDateTime
 class ForecastRepositoryImpl(
     private val currentlyDao: CurrentlyDao,
     private val dailyDao: DailyDao,
-    private val weatherNetworkDataSource: WeatherNetworkDataSource
+    private val hourlyDao: HourlyDao,
+    private val weatherNetworkDataSource: WeatherNetworkDataSource,
+    private val fusedLocationProviderClient: FusedLocationProviderClient
 ) : ForecastRepository {
 
+    private lateinit var Lat: String
+    private lateinit var Long: String
+
     init {
+
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+            Lat = it.latitude.toString()
+            Long = it.longitude.toString()
+        }
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
             persistFetchedWeather(newCurrentWeather)
         }
@@ -32,12 +49,16 @@ class ForecastRepositoryImpl(
         }
     }
 
-    override fun getDailyWeatherItem(day: Int): LiveData<Data> {
+    override fun getDailyWeatherItem(day: Int): LiveData<Daily> {
         return dailyDao.getDaily(day)
     }
 
-    override fun getDailyWeatherList(): LiveData<MutableList<Data>> {
+    override fun getDailyWeatherList(): LiveData<MutableList<Daily>> {
         return dailyDao.getDailyList()
+    }
+
+    override fun getHourlyWeatherList(): LiveData<MutableList<DataX>> {
+        return hourlyDao.getDailyList()
     }
 
     private fun persistFetchedWeather(fetchedWeather: WeatherResponce){
@@ -46,6 +67,8 @@ class ForecastRepositoryImpl(
             currentlyDao.upsert(fetchedWeather.currently)
             dailyDao.startFresh() //Delete all cause not guaranteed to be same from last last pull
             dailyDao.insert(fetchedWeather.daily.day)
+            hourlyDao.startFresh()
+            hourlyDao.insert(fetchedWeather.hourly.data)
         }
     }
 
@@ -55,7 +78,8 @@ class ForecastRepositoryImpl(
     }
 
     private suspend fun  fetchWeather() {
-        weatherNetworkDataSource.fetchWeather("44.9631,-93.2666")
+
+        weatherNetworkDataSource.fetchWeather("$Lat,$Long")
     }
 
     private fun isFetchedWeatherNeeded(lastFetchTime: ZonedDateTime): Boolean {

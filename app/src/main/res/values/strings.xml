@@ -3,4 +3,10 @@
     <string name="low_temp">Low Temp:</string>
     <string name="Precip">Precip:</string>
     <string name="Vis">Visibility:</string>
+    <string name="tabOne">Right Now</string>
+    <string name="tabTwo">Next 7 Days</string>
+
+    <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="Temp">Temp:</string>
+    <string name="windSpeed">Wind:</string>
 </resources>

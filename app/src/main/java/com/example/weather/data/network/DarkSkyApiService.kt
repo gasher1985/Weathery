@@ -15,7 +15,7 @@ const val API_KEY = "ae27d1fee35ec2fca44b8fcc5d8d6f4b"
 interface DarkSkyApiService {
 
 
-    @GET("/forecast/ae27d1fee35ec2fca44b8fcc5d8d6f4b/{latlong}")
+    @GET("/forecast/ae27d1fee35ec2fca44b8fcc5d8d6f4b/{latlong}?units=auto")
     suspend fun getCurrentWeather(@Path("latlong") latlong: String): WeatherResponce
 
     companion object {

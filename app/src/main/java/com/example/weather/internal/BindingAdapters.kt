@@ -5,13 +5,10 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.weather.R
-import com.squareup.picasso.Picasso
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -42,6 +39,13 @@ fun timeToString(textView: TextView, unixTime: Int) {
     val unixConversion = Instant.ofEpochSecond(unixTime.toLong())
     val localDate = unixConversion.atZone(ZoneId.systemDefault()).toLocalDate()
     textView.text = localDate.format(DateTimeFormatter.ofPattern("MMM dd"))
+}
+
+@BindingAdapter("hourString")
+fun timeToHour(textView: TextView, unixTime: Int) {
+    val unixConversion = Instant.ofEpochSecond(unixTime.toLong())
+    val localDate = unixConversion.atZone(ZoneId.systemDefault()).toLocalDate()
+    textView.text = localDate.format(DateTimeFormatter.ofPattern("hh a"))
 }
 
 @BindingAdapter("roundToInt")
@@ -78,29 +82,3 @@ fun feelsRoundToInt(textView: TextView, dTemp: Double){
     textView.text = "Feels Like " + feels + "°F"
 }
 
-@BindingAdapter("bearingToString")
-fun bearing(textView: TextView, bearing: Int){
-    val bearingString: String
-    when(bearing) {
-        0 -> bearingString = "Calm"
-        in 1..11 -> bearingString = "N"
-        in 12..34 -> bearingString = "NNE"
-        in 35..56 -> bearingString = "NE"
-        in 37..79 -> bearingString = "ENE"
-        in 80..101 -> bearingString = "E"
-        in 102..124 -> bearingString = "ESE"
-        in 125..146 -> bearingString = "SE"
-        in 147..169 -> bearingString = "SSE"
-        in 170..191 -> bearingString = "S"
-        in 192..214 -> bearingString = "SSW"
-        in 215..236 -> bearingString = "SW"
-        in 237..259 -> bearingString = "WSW"
-        in 260..281 -> bearingString = "W"
-        in 282..304 -> bearingString = "WNW"
-        in 305..326 -> bearingString = "NW"
-        in 327..349 -> bearingString = "NNW"
-        in 350..360 -> bearingString = "N"
-        else -> bearingString = "Unknown"
-    }
-    textView.text = "Wind: " + bearingString + ","
-}
