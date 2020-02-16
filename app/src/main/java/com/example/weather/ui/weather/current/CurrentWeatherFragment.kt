@@ -1,14 +1,13 @@
 package com.example.weather.ui.weather.current
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,12 +24,16 @@ import org.kodein.di.android.x.closestKodein
 import org.kodein.di.generic.instance
 import kotlin.math.roundToInt
 
+const val MY_PERMISSION_ACCESS_COARSE_LOCATION = 1
 class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
     override val kodein by closestKodein()
     private val viewModelFactory: CurrentWeatherViewModelFactory by instance()
     lateinit var imageView: ImageView
     val helper = Helpers()
     private lateinit var viewModel: CurrentWeatherViewModel
+
+    private var Lat: String = ""
+    private var Lon: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,10 +53,18 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView_background!!)
         hourlyRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        bindUI()
+
+        viewModel.getLocationData().observe(viewLifecycleOwner, Observer {
+            if (it == null) return@Observer
+
+            Lat = it.latitude.toString()
+            Lon = it.longitude.toString()
+            bindUI(Lat, Lon)
+        })
     }
-    private fun bindUI() = launch {
-        val currentWeather = viewModel.weather.await()
+
+    fun bindUI(lat: String, lon: String) = launch {
+        val currentWeather = viewModel.getWeather(lat, lon)
         val dailyWeather = viewModel.daily.await()
         currentWeather.observe(viewLifecycleOwner, Observer {
             if (it == null) return@Observer

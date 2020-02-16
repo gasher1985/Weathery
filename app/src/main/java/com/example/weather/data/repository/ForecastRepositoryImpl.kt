@@ -24,27 +24,18 @@ class ForecastRepositoryImpl(
     private val currentlyDao: CurrentlyDao,
     private val dailyDao: DailyDao,
     private val hourlyDao: HourlyDao,
-    private val weatherNetworkDataSource: WeatherNetworkDataSource,
-    private val fusedLocationProviderClient: FusedLocationProviderClient
+    private val weatherNetworkDataSource: WeatherNetworkDataSource
 ) : ForecastRepository {
 
-    private lateinit var Lat: String
-    private lateinit var Long: String
-
     init {
-
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            Lat = it.latitude.toString()
-            Long = it.longitude.toString()
-        }
         weatherNetworkDataSource.downloadedCurrentWeather.observeForever { newCurrentWeather ->
             persistFetchedWeather(newCurrentWeather)
         }
     }
 
-    override suspend fun getCurrentWeather(): LiveData<Currently> {
+    override suspend fun getCurrentWeather(lat: String, long: String): LiveData<Currently> {
         return withContext(Dispatchers.IO) {
-            initWeatherData()
+            initWeatherData(lat, long)
             return@withContext currentlyDao.getCurrently()
         }
     }
@@ -72,14 +63,14 @@ class ForecastRepositoryImpl(
         }
     }
 
-    private suspend fun initWeatherData() {
+    private suspend fun initWeatherData(lat: String, long: String) {
         if (isFetchedWeatherNeeded(ZonedDateTime.now().minusHours(1)))
-            fetchWeather()
+            fetchWeather(lat, long)
     }
 
-    private suspend fun  fetchWeather() {
+    private suspend fun  fetchWeather(lat: String, long: String) {
 
-        weatherNetworkDataSource.fetchWeather("$Lat,$Long")
+        weatherNetworkDataSource.fetchWeather("$lat,$long")
     }
 
     private fun isFetchedWeatherNeeded(lastFetchTime: ZonedDateTime): Boolean {
